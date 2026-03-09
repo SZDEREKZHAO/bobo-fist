@@ -255,6 +255,57 @@ button:active {
     border-right: 4px solid var(--primary);
 }
 
+/* 对手技能说明 */
+.fighter-skills {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    text-align: left;
+    font-size: 0.8em;
+}
+
+.fighter-skills .skill-item,
+.fighter-skills .super-item,
+.fighter-skills .shield-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.fighter-skills .skill-item {
+    background: rgba(255,255,255,0.05);
+}
+
+.fighter-skills .super-item {
+    background: rgba(255,107,53,0.15);
+}
+
+.fighter-skills .shield-item {
+    background: rgba(78,205,196,0.15);
+}
+
+.fighter-skills .skill-icon,
+.fighter-skills .super-icon,
+.fighter-skills .shield-icon {
+    font-size: 1.2em;
+}
+
+.fighter-skills .skill-text {
+    color: var(--text-muted);
+}
+
+.fighter-skills .super-text {
+    color: var(--accent);
+}
+
+.fighter-skills .shield-text {
+    color: var(--secondary);
+}
+
 .fighter-avatar {
     font-size: 4em;
     margin-bottom: 10px;

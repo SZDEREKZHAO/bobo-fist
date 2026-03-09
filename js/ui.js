@@ -89,6 +89,9 @@ function updateUI() {
         p2ComboEl.classList.remove('active');
     }
     
+    // 更新对手技能说明
+    updateOpponentSkills();
+    
     // 血量模式才显示血条
     if (GameState.mode === 'standard') {
         document.getElementById('p1-hp-bar').style.display = 'none';
@@ -127,6 +130,30 @@ function updateShieldButton(player) {
     if (emojiEl) emojiEl.textContent = shieldMove.emoji;
     if (nameEl) nameEl.textContent = shieldMove.name;
     if (descEl) descEl.textContent = '消耗20能量';
+}
+
+// 更新对手技能说明
+function updateOpponentSkills() {
+    const p2Character = GameState.p2Character;
+    if (!p2Character) return;
+    
+    // 更新被动技能
+    const skillIcon = document.getElementById('p2-skill-icon');
+    const skillText = document.getElementById('p2-skill-desc');
+    if (skillIcon) skillIcon.textContent = '📋';
+    if (skillText) skillText.textContent = p2Character.skill;
+    
+    // 更新大招
+    const superIcon = document.getElementById('p2-super-icon');
+    const superText = document.getElementById('p2-super-desc');
+    if (superIcon) superIcon.textContent = p2Character.superMove.emoji;
+    if (superText) superText.textContent = `${p2Character.superMove.name}: ${p2Character.superMove.desc}`;
+    
+    // 更新护盾
+    const shieldIcon = document.getElementById('p2-shield-icon');
+    const shieldText = document.getElementById('p2-shield-desc');
+    if (shieldIcon) shieldIcon.textContent = p2Character.shieldMove.emoji;
+    if (shieldText) shieldText.textContent = `${p2Character.shieldMove.name}: ${p2Character.shieldMove.desc}`;
 }
 
 // 显示伤害飘字
