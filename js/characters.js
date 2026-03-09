@@ -1,4 +1,4 @@
-// 波波拳 - 角色数据（专属大招版本）
+// 波波拳 - 角色数据（V5：大招+护盾系统，能量消耗降低至50）
 
 const CHARACTERS = [
     {
@@ -19,8 +19,16 @@ const CHARACTERS = [
             type: 'balloonBurst',
             desc: '释放全部充气能量，造成高额伤害',
             effect: 'dealDamage',
-            multiplier: 3.5,
+            multiplier: 2.5,
             animClass: 'super-balloon'
+        },
+        shieldMove: {
+            name: '气球护盾',
+            emoji: '🛡️',
+            type: 'balloonShield',
+            desc: '充气形成护盾，免疫本次伤害',
+            effect: 'shield',
+            animClass: 'shield-balloon'
         }
     },
     {
@@ -41,9 +49,18 @@ const CHARACTERS = [
             type: 'megaPunch',
             desc: '蓄力一击，伤害翻倍并眩晕对手',
             effect: 'dealDamage',
-            multiplier: 4,
+            multiplier: 3,
             bonusEffect: 'stun',
             animClass: 'super-punch'
+        },
+        shieldMove: {
+            name: '铁壁防御',
+            emoji: '🛡️',
+            type: 'ironShield',
+            desc: '架起铁壁，免疫并反弹30%伤害',
+            effect: 'shieldReflect',
+            reflectPercent: 30,
+            animClass: 'shield-iron'
         }
     },
     {
@@ -62,11 +79,20 @@ const CHARACTERS = [
             name: '影分身之术',
             emoji: '🌪️',
             type: 'ninjaStorm',
-            desc: '召唤3个分身同时攻击，伤害x3',
+            desc: '召唤3个分身同时攻击，伤害x2',
             effect: 'dealDamage',
-            multiplier: 3,
+            multiplier: 2,
             hits: 3,
             animClass: 'super-ninja'
+        },
+        shieldMove: {
+            name: '替身术',
+            emoji: '💨',
+            type: 'substitution',
+            desc: '使用替身木承受伤害，瞬移反击',
+            effect: 'shieldCounter',
+            counterDamage: 15,
+            animClass: 'shield-ninja'
         }
     },
     {
@@ -87,10 +113,19 @@ const CHARACTERS = [
             type: 'elementalBlast',
             desc: '召唤火冰雷三重元素，伤害+灼烧',
             effect: 'dealDamage',
-            multiplier: 3,
+            multiplier: 2.5,
             bonusEffect: 'burn',
             burnDamage: 5,
             animClass: 'super-mage'
+        },
+        shieldMove: {
+            name: '元素护盾',
+            emoji: '🔮',
+            type: 'elementalShield',
+            desc: '召唤元素护盾，吸收伤害并回血',
+            effect: 'shieldHeal',
+            healAmount: 20,
+            animClass: 'shield-mage'
         }
     },
     {
@@ -111,10 +146,19 @@ const CHARACTERS = [
             type: 'bloodStorm',
             desc: '召唤血月，造成伤害并吸血50%',
             effect: 'dealDamage',
-            multiplier: 2.5,
+            multiplier: 2,
             bonusEffect: 'lifesteal',
             lifestealPercent: 50,
             animClass: 'super-vampire'
+        },
+        shieldMove: {
+            name: '血盾',
+            emoji: '🩸',
+            type: 'bloodShield',
+            desc: '凝聚血盾，免疫伤害并回血20%',
+            effect: 'shieldHeal',
+            healAmount: 20,
+            animClass: 'shield-vampire'
         }
     },
     {
@@ -135,9 +179,18 @@ const CHARACTERS = [
             type: 'laserCannon',
             desc: '发射高能激光，无视防御',
             effect: 'dealDamage',
-            multiplier: 3,
+            multiplier: 2.5,
             bonusEffect: 'pierce',
             animClass: 'super-robot'
+        },
+        shieldMove: {
+            name: '能量护盾',
+            emoji: '⚡',
+            type: 'energyShield',
+            desc: '启动能量护盾，免疫并充能30',
+            effect: 'shieldCharge',
+            chargeAmount: 30,
+            animClass: 'shield-robot'
         }
     },
     {
@@ -156,12 +209,20 @@ const CHARACTERS = [
             name: '命运轮盘',
             emoji: '🎯',
             type: 'jackpot',
-            desc: '伤害在x2~x5之间随机',
+            desc: '伤害在x1.5~x4之间随机',
             effect: 'dealDamage',
-            multiplierMin: 2,
-            multiplierMax: 5,
+            multiplierMin: 1.5,
+            multiplierMax: 4,
             random: true,
             animClass: 'super-gambler'
+        },
+        shieldMove: {
+            name: '幸运守护',
+            emoji: '🍀',
+            type: 'luckyShield',
+            desc: '50%概率完全免疫，50%概率减半',
+            effect: 'shieldRandom',
+            animClass: 'shield-gambler'
         }
     },
     {
@@ -182,12 +243,24 @@ const CHARACTERS = [
             type: 'earthquake',
             desc: '重击地面，伤害并眩晕对手',
             effect: 'dealDamage',
-            multiplier: 2.5,
+            multiplier: 2,
             bonusEffect: 'stun',
             animClass: 'super-tank'
+        },
+        shieldMove: {
+            name: '绝对防御',
+            emoji: '🏰',
+            type: 'absoluteDefense',
+            desc: '进入绝对防御状态，免疫2回合',
+            effect: 'shieldExtended',
+            duration: 2,
+            animClass: 'shield-tank'
         }
     }
 ];
+
+// 能量消耗
+const ENERGY_COST = 50; // 大招和护盾都消耗50能量
 
 // 获取角色数据
 function getCharacter(id) {
@@ -204,6 +277,7 @@ function generateCharacterCards() {
             <div class="character-title">${char.title}</div>
             <div class="character-skill">${char.skill}</div>
             <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
+            <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
         </div>
     `).join('');
 }
@@ -218,6 +292,7 @@ function generatePVPCards() {
             <div class="character-title">${char.title}</div>
             <div class="character-skill">${char.skill}</div>
             <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
+            <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
         </div>
     `).join('');
 }

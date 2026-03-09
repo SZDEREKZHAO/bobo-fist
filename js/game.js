@@ -75,12 +75,21 @@ function bindEvents() {
             if (GameState.isPVP && GameState.pvpTurn !== 1) return;
             
             const isSuper = btn.classList.contains('super-btn');
+            const isShield = btn.classList.contains('shield-btn');
             const move = btn.dataset.move;
             
             if (GameState.isPVP) {
-                handlePVPMove(1, move || 'super', isSuper);
+                if (isShield) {
+                    handlePVPShield(1);
+                } else {
+                    handlePVPMove(1, move || 'super', isSuper);
+                }
             } else {
-                playRound(move || 'super', isSuper);
+                if (isShield) {
+                    useShield(1);
+                } else {
+                    playRound(move || 'super', isSuper);
+                }
             }
         });
     });
@@ -92,8 +101,14 @@ function bindEvents() {
             if (!GameState.isPVP || GameState.pvpTurn !== 2) return;
             
             const isSuper = btn.classList.contains('super-btn');
+            const isShield = btn.classList.contains('shield-btn');
             const move = btn.dataset.move;
-            handlePVPMove(2, move || 'super', isSuper);
+            
+            if (isShield) {
+                handlePVPShield(2);
+            } else {
+                handlePVPMove(2, move || 'super', isSuper);
+            }
         });
     });
 }
@@ -394,29 +409,57 @@ function showBattleAnimation(p1Move, p2Move, p1IsSuper, p2IsSuper, p1Char, p2Cha
 }
 
 function showSuperBattleAnimation(container, attacker, side, callback) {
-    const superAnim = attacker.superAnim;
+    const superMove = attacker.superMove;
     const isLeft = side === 'left';
+    
+    // 创建能量漩涡背景
+    const vortex = document.createElement('div');
+    vortex.className = 'energy-vortex';
+    container.appendChild(vortex);
+    
+    // 创建超级冲击波
+    const blast = document.createElement('div');
+    blast.className = 'super-blast';
+    container.appendChild(blast);
     
     // 创建大招名称显示
     const superName = document.createElement('div');
     superName.className = 'super-name';
-    superName.textContent = superAnim.name;
+    superName.textContent = superMove.name;
+    superName.style.fontSize = '3em';
+    superName.style.textShadow = '0 0 30px #ff6b35, 0 0 60px #ffd700';
     container.appendChild(superName);
     
     // 创建大招描述
     const superDesc = document.createElement('div');
     superDesc.className = 'super-desc-text';
-    superDesc.textContent = superAnim.desc;
+    superDesc.textContent = superMove.desc;
     container.appendChild(superDesc);
     
     // 创建角色大招特效
     const superEffect = document.createElement('div');
-    superEffect.className = `super-attack ${superAnim.type} ${side}`;
-    superEffect.textContent = superAnim.emoji;
+    superEffect.className = `super-attack ${superMove.type} ${side}`;
+    superEffect.textContent = superMove.emoji;
+    superEffect.style.fontSize = '12em';
     container.appendChild(superEffect);
     
+    // 添加粒子爆炸效果
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-burst';
+        const angle = (i / 20) * Math.PI * 2;
+        const distance = 200 + Math.random() * 200;
+        particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+        particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+        particle.style.left = '50%';
+        particle.style.top = '40%';
+        particle.style.animationDelay = `${Math.random() * 0.3}s`;
+        particle.style.background = `hsl(${Math.random() * 60 + 10}, 100%, 50%)`;
+        container.appendChild(particle);
+    }
+    
     // 根据大招类型添加特效
-    switch(superAnim.type) {
+    switch(superMove.type) {
         case 'balloonBurst':
             createBalloonEffect(container, isLeft);
             break;
@@ -428,6 +471,15 @@ function showSuperBattleAnimation(container, attacker, side, callback) {
             break;
         case 'elementalBlast':
             createElementalEffect(container);
+            // 添加闪电链
+            for (let i = 0; i < 5; i++) {
+                const lightning = document.createElement('div');
+                lightning.className = 'lightning-chain';
+                lightning.style.left = `${30 + i * 10}%`;
+                lightning.style.top = '20%';
+                lightning.style.animationDelay = `${i * 0.1}s`;
+                container.appendChild(lightning);
+            }
             break;
         case 'bloodStorm':
             createBloodEffect(container, isLeft);
@@ -442,7 +494,6 @@ function showSuperBattleAnimation(container, attacker, side, callback) {
             createEarthquakeEffect(container);
             break;
         default:
-            // 默认能量波效果
             createDefaultSuperEffect(container, isLeft);
     }
     
@@ -452,6 +503,9 @@ function showSuperBattleAnimation(container, attacker, side, callback) {
     setTimeout(() => {
         document.body.classList.remove('screen-shake');
         container.remove();
+        callback();
+    }, 2000);
+}
         callback();
     }, 2000);
 }
@@ -689,6 +743,240 @@ function getAttackEffectEmoji(type) {
         shieldBash: '🛡️'
     };
     return effects[type] || '💥';
+}
+
+// 使用护盾（单人模式）
+function useShield(player) {
+    if (player === 1 && GameState.p1Bobo < ENERGY_COST) return;
+    if (player === 2 && GameState.p2Bobo < ENERGY_COST) return;
+    
+    const character = player === 1 ? GameState.p1Character : GameState.p2Character;
+    const shieldMove = character.shieldMove;
+    
+    // 消耗能量
+    if (player === 1) {
+        GameState.p1Bobo -= ENERGY_COST;
+    } else {
+        GameState.p2Bobo -= ENERGY_COST;
+    }
+    
+    // 播放护盾动画
+    showShieldAnimation(player, shieldMove);
+    
+    // 应用护盾效果
+    applyShieldEffect(player, shieldMove);
+    
+    addLog(`${character.avatar} ${character.name}使用了${shieldMove.name}！`);
+    
+    // AI回合
+    if (player === 1 && !GameState.isPVP) {
+        // AI选择出招
+        setTimeout(() => {
+            const aiUseSuper = GameState.ai.chooseSuper(GameState.p2Bobo, GameState.p1Bobo, GameState.p2HP, GameState.p1HP);
+            if (aiUseSuper) {
+                // AI使用大招
+                const p1Move = GameState.ai.chooseMove(GameState.p1Bobo, GameState.p2Bobo);
+                resolveAIAttack(p1Move, true);
+            } else {
+                const p1Move = GameState.ai.chooseMove(GameState.p1Bobo, GameState.p2Bobo);
+                resolveAIAttack(p1Move, false);
+            }
+        }, 1500);
+    }
+    
+    updateUI();
+}
+
+// 处理PVP护盾
+function handlePVPShield(player) {
+    if (player === 1 && GameState.p1Bobo < ENERGY_COST) return;
+    if (player === 2 && GameState.p2Bobo < ENERGY_COST) return;
+    
+    const character = player === 1 ? GameState.p1Character : GameState.p2Character;
+    const shieldMove = character.shieldMove;
+    
+    // 消耗能量
+    if (player === 1) {
+        GameState.p1Bobo -= ENERGY_COST;
+    } else {
+        GameState.p2Bobo -= ENERGY_COST;
+    }
+    
+    // 播放护盾动画
+    showShieldAnimation(player, shieldMove);
+    
+    addLog(`${character.avatar} ${character.name}使用了${shieldMove.name}！`);
+    
+    updateUI();
+}
+
+// 播放护盾动画
+function showShieldAnimation(player, shieldMove) {
+    const container = document.createElement('div');
+    container.className = 'battle-animation';
+    document.body.appendChild(container);
+    
+    const isLeft = player === 1;
+    
+    // 能量漩涡背景
+    const vortex = document.createElement('div');
+    vortex.className = 'energy-vortex';
+    vortex.style.borderColor = '#4ecdc4';
+    vortex.style.borderRightColor = '#60a5fa';
+    container.appendChild(vortex);
+    
+    // 护盾特效
+    const shield = document.createElement('div');
+    shield.className = `shield-effect ${shieldMove.animClass} ${isLeft ? 'left' : 'right'}`;
+    shield.textContent = shieldMove.emoji;
+    container.appendChild(shield);
+    
+    // 护盾名称
+    const name = document.createElement('div');
+    name.className = 'shield-name-text';
+    name.textContent = shieldMove.name;
+    container.appendChild(name);
+    
+    // 护盾光环
+    const aura = document.createElement('div');
+    aura.className = 'shield-aura';
+    aura.style.left = isLeft ? '20%' : 'auto';
+    aura.style.right = isLeft ? 'auto' : '20%';
+    container.appendChild(aura);
+    
+    // 添加粒子效果
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-burst';
+        particle.style.width = '8px';
+        particle.style.height = '8px';
+        particle.style.background = '#4ecdc4';
+        const angle = (i / 12) * Math.PI * 2;
+        const distance = 150;
+        particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+        particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+        particle.style.left = isLeft ? '25%' : '75%';
+        particle.style.top = '40%';
+        particle.style.animationDelay = `${i * 0.05}s`;
+        container.appendChild(particle);
+    }
+    
+    setTimeout(() => {
+        container.remove();
+    }, 1800);
+}
+
+// 播放护盾格挡动画（当护盾挡住攻击时）
+function showShieldBlockAnimation(player, shieldMove) {
+    const container = document.createElement('div');
+    container.className = 'battle-animation';
+    document.body.appendChild(container);
+    
+    const isLeft = player === 1;
+    
+    // 格挡文字
+    const blockText = document.createElement('div');
+    blockText.className = 'block-text';
+    blockText.textContent = '格挡！';
+    container.appendChild(blockText);
+    
+    // 护盾格挡动画
+    const shield = document.createElement('div');
+    shield.className = `shield-block ${isLeft ? 'left' : 'right'}`;
+    shield.textContent = shieldMove?.emoji || '🛡️';
+    shield.style.left = isLeft ? '20%' : 'auto';
+    shield.style.right = isLeft ? 'auto' : '20%';
+    shield.style.top = '30%';
+    container.appendChild(shield);
+    
+    // 格挡火花
+    for (let i = 0; i < 8; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'block-spark';
+        spark.style.setProperty('--angle', `${i * 45}deg`);
+        spark.style.left = isLeft ? '30%' : '70%';
+        spark.style.top = '40%';
+        spark.style.animationDelay = `${i * 0.05}s`;
+        container.appendChild(spark);
+    }
+    
+    // 护盾光环扩散
+    const aura = document.createElement('div');
+    aura.className = 'shield-aura';
+    aura.style.left = isLeft ? '20%' : 'auto';
+    aura.style.right = isLeft ? 'auto' : '20%';
+    aura.style.border = '3px solid #4ecdc4';
+    aura.style.borderRadius = '50%';
+    container.appendChild(aura);
+    
+    setTimeout(() => {
+        container.remove();
+    }, 1200);
+}
+
+// 应用护盾效果
+function applyShieldEffect(player, shieldMove) {
+    switch(shieldMove.effect) {
+        case 'shield':
+            // 基础护盾 - 免疫一次伤害
+            addLog(`🛡️ 护盾生效，免疫下一次伤害！`);
+            break;
+        case 'shieldReflect':
+            // 反弹护盾
+            addLog(`🛡️ 铁壁防御生效，将反弹${shieldMove.reflectPercent}%伤害！`);
+            break;
+        case 'shieldCounter':
+            // 反击护盾
+            addLog(`💨 替身术生效，将瞬移反击！`);
+            break;
+        case 'shieldHeal':
+            // 回血护盾
+            const heal = shieldMove.healAmount;
+            if (player === 1) {
+                GameState.p1HP = Math.min(100, GameState.p1HP + heal);
+            } else {
+                GameState.p2HP = Math.min(100, GameState.p2HP + heal);
+            }
+            addLog(`💚 护盾恢复${heal}点生命！`);
+            break;
+        case 'shieldCharge':
+            // 充能护盾
+            const charge = shieldMove.chargeAmount;
+            if (player === 1) {
+                GameState.p1Bobo = Math.min(100, GameState.p1Bobo + charge);
+            } else {
+                GameState.p2Bobo = Math.min(100, GameState.p2Bobo + charge);
+            }
+            addLog(`⚡ 护盾充能+${charge}！`);
+            break;
+        case 'shieldRandom':
+            // 随机护盾
+            addLog(`🍀 幸运守护生效，概率免疫伤害！`);
+            break;
+        case 'shieldExtended':
+            // 持续护盾
+            addLog(`🏰 绝对防御生效，持续${shieldMove.duration}回合！`);
+            break;
+    }
+}
+
+// AI攻击结算
+function resolveAIAttack(p1Move, aiUseSuper) {
+    // 保存出招结果
+    GameState.pendingBattle = {
+        p1Move, p2Move: 'super',
+        p1IsSuper: false, p2IsSuper: aiUseSuper
+    };
+    
+    // 显示战斗动画
+    showBattleAnimation(p1Move, aiUseSuper ? 'super' : p1Move, false, aiUseSuper, GameState.p1Character, GameState.p2Character, () => {
+        const result = judgeRound(p1Move, aiUseSuper ? 'super' : p1Move, false, aiUseSuper);
+        processRoundResult(result, false, aiUseSuper);
+        
+        if (!aiUseSuper) GameState.ai.recordMove(p1Move);
+        
+        updateUI();
+    });
 }
 
 function judgeRound(p1Move, p2Move, p1Super, p2Super) {
