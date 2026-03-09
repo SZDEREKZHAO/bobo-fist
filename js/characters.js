@@ -260,7 +260,7 @@ const CHARACTERS = [
 ];
 
 // 能量消耗
-const ENERGY_COST = 50; // 大招和护盾都消耗50能量
+const ENERGY_COST = 20; // 大招和护盾都消耗20能量
 
 // 获取角色数据
 function getCharacter(id) {

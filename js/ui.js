@@ -111,7 +111,7 @@ function updateSuperButton(player) {
     
     if (emojiEl) emojiEl.textContent = superMove.emoji;
     if (nameEl) nameEl.textContent = superMove.name;
-    if (descEl) descEl.textContent = superMove.desc;
+    if (descEl) descEl.textContent = '消耗20能量';
 }
 
 // 更新护盾按钮显示
@@ -126,7 +126,7 @@ function updateShieldButton(player) {
     
     if (emojiEl) emojiEl.textContent = shieldMove.emoji;
     if (nameEl) nameEl.textContent = shieldMove.name;
-    if (descEl) descEl.textContent = shieldMove.desc;
+    if (descEl) descEl.textContent = '消耗20能量';
 }
 
 // 显示伤害飘字
