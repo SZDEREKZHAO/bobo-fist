@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>波波拳 - 充气放大招！(SVG版)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .char-svg { display: block; margin: 0 auto; }
+        .character-avatar { width: 80px; height: 80px; margin: 0 auto 15px; background: rgba(0,0,0,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .character-avatar svg { width: 70px; height: 70px; }
+        .fighter-avatar { width: 100px; height: 100px; margin: 0 auto 10px; background: rgba(0,0,0,0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .fighter-avatar svg { width: 80px; height: 80px; }
+    </style>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <symbol id="char-bobo" viewBox="0 0 100 100">
+            <ellipse cx="50" cy="65" rx="25" ry="20" fill="#ff6b6b"/>
+            <circle cx="50" cy="35" r="22" fill="#ffd93d"/>
+            <circle cx="43" cy="32" r="4" fill="#333"/>
+            <circle cx="57" cy="32" r="4" fill="#333"/>
+            <circle cx="75" cy="25" r="15" fill="#ff6b9d" opacity="0.8"/>
+            <path d="M75 40 Q75 50 70 55" stroke="#ff6b9d" stroke-width="2" fill="none"/>
+            <ellipse cx="50" cy="45" rx="8" ry="5" fill="#ff8fab"/>
+            <ellipse cx="25" cy="55" rx="8" ry="12" fill="#ffd93d"/>
+            <ellipse cx="75" cy="55" rx="8" ry="12" fill="#ffd93d"/>
+        </symbol>
+
+        <symbol id="char-fist" viewBox="0 0 100 100">
+            <rect x="30" y="45" width="40" height="35" rx="5" fill="#e74c3c"/>
+            <rect x="35" y="50" width="30" height="5" fill="#c0392b"/>
+            <rect x="35" y="60" width="30" height="5" fill="#c0392b"/>
+            <circle cx="50" cy="30" r="20" fill="#f39c12"/>
+            <rect x="30" y="20" width="40" height="8" fill="#e74c3c"/>
+            <path d="M40 28 L48 32" stroke="#333" stroke-width="3"/>
+            <path d="M60 28 L52 32" stroke="#333" stroke-width="3"/>
+            <circle cx="25" cy="60" r="12" fill="#f39c12"/>
+            <circle cx="75" cy="60" r="12" fill="#f39c12"/>
+            <rect x="20" y="55" width="10" height="3" fill="#e67e22"/>
+            <rect x="70" y="55" width="10" height="3" fill="#e67e22"/>
+        </symbol>
+
+        <symbol id="char-ninja" viewBox="0 0 100 100">
+            <path d="M30 80 L50 45 L70 80 Z" fill="#2c3e50"/>
+            <path d="M35 35 Q50 25 65 35 L65 50 L35 50 Z" fill="#34495e"/>
+            <path d="M65 40 L85 35 L80 45 Z" fill="#e74c3c"/>
+            <ellipse cx="43" cy="42" rx="5" ry="3" fill="#fff"/>
+            <ellipse cx="57" cy="42" rx="5" ry="3" fill="#fff"/>
+            <circle cx="43" cy="42" r="1.5" fill="#333"/>
+            <circle cx="57" cy="42" r="1.5" fill="#333"/>
+            <path d="M80 60 L90 50 L95 55 L85 65 Z" fill="#95a5a6"/>
+            <rect x="87" y="62" width="3" height="15" fill="#7f8c8d"/>
+            <path d="M20 55 L25 45 L30 55 L25 65 Z" fill="#bdc3c7"/>
+        </symbol>
+
+        <symbol id="char-mage" viewBox="0 0 100 100">
+            <path d="M25 85 L35 40 L50 35 L65 40 L75 85 Z" fill="#9b59b6"/>
+            <path d="M30 35 L50 5 L70 35 Z" fill="#8e44ad"/>
+            <ellipse cx="50" cy="35" rx="22" ry="5" fill="#9b59b6"/>
+            <circle cx="50" cy="30" r="12" fill="#f5d0c5"/>
+            <circle cx="46" cy="28" r="2" fill="#333"/>
+            <circle cx="54" cy="28" r="2" fill="#333"/>
+            <path d="M45 35 Q50 42 55 35" stroke="#ecf0f1" stroke-width="2" fill="none"/>
+            <rect x="75" y="30" width="4" height="50" fill="#8b4513"/>
+            <circle cx="77" cy="25" r="8" fill="#3498db"/>
+            <circle cx="77" cy="25" r="4" fill="#85c1e9"/>
+            <circle cx="20" cy="30" r="2" fill="#e74c3c"/>
+            <circle cx="15" cy="45" r="1.5" fill="#f39c12"/>
+            <circle cx="25" cy="20" r="1.5" fill="#2ecc71"/>
+        </symbol>
+
+        <symbol id="char-vampire" viewBox="0 0 100 100">
+            <path d="M20 85 L30 40 L70 40 L80 85 Q50 75 20 85" fill="#8e44ad"/>
+            <rect x="35" y="45" width="30" height="35" fill="#2c3e50"/>
+            <path d="M42 50 L58 50 L50 60 Z" fill="#c0392b"/>
+            <ellipse cx="50" cy="30" rx="18" ry="20" fill="#f5d0c5"/>
+            <path d="M32 25 Q50 10 68 25 L68 35 Q50 25 32 35 Z" fill="#2c3e50"/>
+            <ellipse cx="44" cy="30" rx="4" ry="5" fill="#e74c3c"/>
+            <ellipse cx="56" cy="30" rx="4" ry="5" fill="#e74c3c"/>
+            <circle cx="44" cy="30" r="1.5" fill="#000"/>
+            <circle cx="56" cy="30" r="1.5" fill="#000"/>
+            <path d="M47 40 L49 45 L51 40" fill="#fff"/>
+            <path d="M53 40 L51 45 L49 40" fill="#fff"/>
+            <path d="M75 20 Q80 15 85 20 Q90 15 95 20 L90 30 L85 25 L80 30 Z" fill="#2c3e50"/>
+        </symbol>
+
+        <symbol id="char-robot" viewBox="0 0 100 100">
+            <rect x="25" y="40" width="50" height="45" rx="5" fill="#7f8c8d"/>
+            <rect x="30" y="45" width="40" height="35" fill="#95a5a6"/>
+            <rect x="35" y="50" width="30" height="8" fill="#3498db" opacity="0.5"/>
+            <rect x="35" y="62" width="30" height="8" fill="#3498db" opacity="0.5"/>
+            <rect x="40" y="15" width="20" height="25" rx="3" fill="#34495e"/>
+            <rect x="42" y="20" width="16" height="15" fill="#2c3e50"/>
+            <rect x="44" y="23" width="4" height="6" fill="#3498db"/>
+            <rect x="52" y="23" width="4" height="6" fill="#3498db"/>
+            <rect x="15" y="50" width="10" height="25" rx="3" fill="#7f8c8d"/>
+            <rect x="75" y="50" width="10" height="25" rx="3" fill="#7f8c8d"/>
+            <circle cx="20" cy="85" r="6" fill="#2c3e50"/>
+            <circle cx="80" cy="85" r="6" fill="#2c3e50"/>
+        </symbol>
+
+        <symbol id="char-gambler" viewBox="0 0 100 100">
+            <ellipse cx="50" cy="70" rx="20" ry="18" fill="#27ae60"/>
+            <circle cx="50" cy="35" r="20" fill="#f5d0c5"/>
+            <ellipse cx="44" cy="32" rx="3" ry="4" fill="#333"/>
+            <ellipse cx="56" cy="32" rx="3" ry="4" fill="#333"/>
+            <path d="M45 42 Q50 48 55 42" stroke="#333" stroke-width="2" fill="none"/>
+            <rect x="30" y="15" width="40" height="12" rx="3" fill="#2c3e50"/>
+            <rect x="32" y="17" width="36" height="8" fill="#34495e"/>
+            <rect x="70" y="50" width="20" height="30" rx="3" fill="#ecf0f1"/>
+            <circle cx="80" cy="58" r="4" fill="#e74c3c"/>
+            <circle cx="80" cy="72" r="4" fill="#2c3e50"/>
+            <rect x="72" y="52" width="4" height="26" fill="#bdc3c7"/>
+            <rect x="84" y="52" width="4" height="26" fill="#bdc3c7"/>
+            <rect x="72" y="52" width="16" height="4" fill="#bdc3c7"/>
+            <rect x="72" y="74" width="16" height="4" fill="#bdc3c7"/>
+            <circle cx="25" cy="45" r="8" fill="#f39c12"/>
+            <text x="25" y="49" text-anchor="middle" font-size="10" fill="#fff">$</text>
+        </symbol>
+
+        <symbol id="char-tank" viewBox="0 0 100 100">
+            <rect x="20" y="35" width="60" height="55" rx="5" fill="#5d6d7e"/>
+            <rect x="25" y="40" width="50" height="45" fill="#85929e"/>
+            <rect x="30" y="45" width="40" height="10" fill="#34495e"/>
+            <rect x="30" y="60" width="40" height="10" fill="#34495e"/>
+            <rect x="30" y="75" width="40" height="5" fill="#34495e"/>
+            <rect x="35" y="10" width="30" height="25" rx="3" fill="#5d6d7e"/>
+            <rect x="38" y="15" width="24" height="15" fill="#2c3e50"/>
+            <rect x="42" y="18" width="6" height="6" fill="#e74c3c"/>
+            <rect x="52" y="18" width="6" height="6" fill="#e74c3c"/>
+            <rect x="10" y="45" width="10" height="40" rx="3" fill="#5d6d7e"/>
+            <rect x="80" y="45" width="10" height="40" rx="3" fill="#5d6d7e"/>
+            <circle cx="15" cy="85" r="8" fill="#2c3e50"/>
+            <circle cx="85" cy="85" r="8" fill="#2c3e50"/>
+        </symbol>
+    </svg>
+
+    <div class="game-container">
+        <header class="game-header">
+            <h1>👊 波波拳 👊</h1>
+            <p class="subtitle">充气 · 蓄力 · 放大招！</p>
+        </header>
+
+        <div id="mode-select" class="screen active">
+            <h2>选择游戏模式</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" data-mode="standard">
+                    <span class="mode-icon">🏆</span>
+                    <span class="mode-name">标准模式</span>
+                    <span class="mode-desc">3局2胜制</span>
+                </button>
+                <button class="mode-btn" data-mode="hp">
+                    <span class="mode-icon">❤️</span>
+                    <span class="mode-name">血量模式</span>
+                    <span class="mode-desc">100HP格斗战</span>
+                </button>
+                <button class="mode-btn" data-mode="pvp">
+                    <span class="mode-icon">👥</span>
+                    <span class="mode-name">双人对战</span>
+                    <span class="mode-desc">本地对战</span>
+                </button>
+            </div>
+            <div class="achievements-preview">
+                <button class="achievements-btn" onclick="showAchievements()">
+                    <span>🏅</span> 成就系统
+                </button>
+            </div>
+        </div>
+
+        <div id="character-select" class="screen">
+            <h2 id="p1-select-title">玩家1选择角色</h2>
+            <div class="character-grid" id="character-grid"></div>
+            <button class="back-btn" onclick="showScreen('mode-select')">← 返回</button>
+        </div>
+
+        <div id="pvp-character-select" class="screen">
+            <h2>玩家2选择角色</h2>
+            <div class="character-grid" id="pvp-character-grid"></div>
+            <button class="back-btn" onclick="showScreen('character-select')">← 返回</button>
+        </div>
+
+        <div id="difficulty-select" class="screen">
+            <h2>选择AI难度</h2>
+            <div class="difficulty-buttons">
+                <button class="diff-btn" data-diff="easy">
+                    <span class="diff-icon">🌱</span>
+                    <span class="diff-name">新手</span>
+                    <span class="diff-desc">AI会犯错</span>
+                </button>
+                <button class="diff-btn" data-diff="normal">
+                    <span class="diff-icon">⚔️</span>
+                    <span class="diff-name">普通</span>
+                    <span class="diff-desc">正常对战</span>
+                </button>
+                <button class="diff-btn" data-diff="hard">
+                    <span class="diff-icon">🔥</span>
+                    <span class="diff-name">困难</span>
+                    <span class="diff-desc">AI会读招</span>
+                </button>
+            </div>
+            <button class="back-btn" onclick="showScreen('character-select')">← 返回</button>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="battle-info">
+                <div class="round-info">第 <span id="round-num">1</span> 回合</div>
+                <div class="score-board">
+                    <span id="p1-score">0</span> : <span id="p2-score">0</span>
+                </div>
+            </div>
+
+            <div class="battle-arena">
+                <div class="fighter player" id="p1-fighter">
+                    <div class="fighter-avatar" id="p1-avatar"><svg width="80" height="80"><use href="#char-bobo"/></svg></div>
+                    <div class="fighter-name" id="p1-name">玩家1</div>
+                    <div class="hp-bar" id="p1-hp-bar">
+                        <div class="hp-fill" id="p1-hp-fill"></div>
+                        <span class="hp-text" id="p1-hp-text">100/100</span>
+                    </div>
+                    <div class="bobo-gauge" id="p1-bobo">
+                        <div class="bobo-fill" id="p1-bobo-fill"></div>
+                        <span class="bobo-text">波波槽</span>
+                    </div>
+                    <div class="combo-display" id="p1-combo"></div>
+                </div>
+
+                <div class="vs-area">
+                    <div class="vs-text">VS</div>
+                    <div class="move-display">
+                        <div class="move-icon" id="p1-move">?</div>
+                        <div class="move-result" id="move-result"></div>
+                        <div class="move-icon" id="p2-move">?</div>
+                    </div>
+                </div>
+
+                <div class="fighter enemy" id="p2-fighter">
+                    <div class="fighter-avatar" id="p2-avatar"><svg width="80" height="80"><use href="#char-fist"/></svg></div>
+                    <div class="fighter-name" id="p2-name">玩家2</div>
+                    <div class="hp-bar" id="p2-hp-bar">
+                        <div class="hp-fill" id="p2-hp-fill"></div>
+                        <span class="hp-text" id="p2-hp-text">100/100</span>
+                    </div>
+                    <div class="bobo-gauge" id="p2-bobo">
+                        <div class="bobo-fill" id="p2-bobo-fill"></div>
+                        <span class="bobo-text">波波槽</span>
+                    </div>
+                    <div class="combo-display" id="p2-combo"></div>
+                </div>
+            </div>
+
+            <div class="item-cards" id="item-cards">
+                <div class="item-card" id="item1" onclick="useItem(0)">
+                    <span class="item-icon">👁️</span>
+                    <span class="item-name">透视眼</span>
+                    <span class="item-desc">看对手出招</span>
+                </div>
+                <div class="item-card" id="item2" onclick="useItem(1)">
+                    <span class="item-icon">🔄</span>
+                    <span class="item-name">换牌手</span>
+                    <span class="item-desc">强制平局</span>
+                </div>
+                <div class="item-card" id="item3" onclick="useItem(2)">
+                    <span class="item-icon">⚡</span>
+                    <span class="item-name">充能器</span>
+                    <span class="item-desc">立即+30能量</span>
+                </div>
+            </div>
+
+            <div class="turn-indicator" id="turn-indicator">
+                <span>玩家1的回合</span>
+            </div>
+
+            <div class="move-controls" id="p1-controls">
+                <div class="player-label">玩家1控制</div>
+                <div class="normal-moves">
+                    <button class="move-btn" data-move="rock" data-player="1">
+                        <span class="move-emoji">👊</span>
+                        <span class="move-label">石头</span>
+                    </button>
+                    <button class="move-btn" data-move="scissors" data-player="1">
+                        <span class="move-emoji">✌️</span>
+                        <span class="move-label">剪刀</span>
+                    </button>
+                    <button class="move-btn" data-move="paper" data-player="1">
+                        <span class="move-emoji">🖐️</span>
+                        <span class="move-label">布</span>
+                    </button>
+                </div>
+                
+                <div class="super-moves" id="p1-super-moves">
+                    <button class="super-btn" data-super="impact" data-player="1" disabled>
+                        <span class="super-emoji">💥</span>
+                        <span class="super-label">波波冲击</span>
+                    </button>
+                    <button class="super-btn" data-super="shield" data-player="1" disabled>
+                        <span class="super-emoji">🛡️</span>
+                        <span class="super-label">波波护盾</span>
+                    </button>
+                    <button class="super-btn" data-super="steal" data-player="1" disabled>
+                        <span class="super-emoji">⚡</span>
+                        <span class="super-label">波波偷取</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="move-controls hidden" id="p2-controls">
+                <div class="player-label">玩家2控制</div>
+                <div class="normal-moves">
+                    <button class="move-btn" data-move="rock" data-player="2">
+                        <span class="move-emoji">👊</span>
+                        <span class="move-label">石头</span>
+                    </button>
+                    <button class="move-btn" data-move="scissors" data-player="2">
+                        <span class="move-emoji">✌️</span>
+                        <span class="move-label">剪刀</span>
+                    </button>
+                    <button class="move-btn" data-move="paper" data-player="2">
+                        <span class="move-emoji">🖐️</span>
+                        <span class="move-label">布</span>
+                    </button>
+                </div>
+                
+                <div class="super-moves" id="p2-super-moves">
+                    <button class="super-btn" data-super="impact" data-player="2" disabled>
+                        <span class="super-emoji">💥</span>
+                        <span class="super-label">波波冲击</span>
+                    </button>
+                    <button class="super-btn" data-super="shield" data-player="2" disabled>
+                        <span class="super-emoji">🛡️</span>
+                        <span class="super-label">波波护盾</span>
+                    </button>
+                    <button class="super-btn" data-super="steal" data-player="2" disabled>
+                        <span class="super-emoji">⚡</span>
+                        <span class="super-label">波波偷取</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="battle-log" id="battle-log"></div>
+            
+            <button class="back-btn" onclick="resetGame()">↺ 重新开始</button>
+        </div>
+
+        <div id="achievements-screen" class="screen">
+            <h2>🏅 成就系统</h2>
+            <div class="achievements-stats">
+                <div class="stat-item">
+                    <span class="stat-label">总游戏场次</span>
+                    <span class="stat-value" id="total-games">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">胜利场次</span>
+                    <span class="stat-value" id="total-wins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">成就解锁</span>
+                    <span class="stat-value" id="achievements-unlocked">0/10</span>
+                </div>
+            </div>
+            <div class="achievements-list" id="achievements-list"></div>
+            <button class="back-btn" onclick="showScreen('mode-select')">← 返回</button>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <div class="result-content">
+                <div class="result-emoji" id="result-emoji">🏆</div>
+                <h2 id="result-title">胜利！</h2>
+                <p id="result-desc">你击败了对手！</p>
+                <div class="achievements-earned" id="achievements-earned"></div>
+                <button class="btn-primary" onclick="resetGame()">再来一局</button>
+                <button class="btn-secondary" onclick="showScreen('mode-select')">返回主菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/achievements.js"></script>
+    <script src="js/characters-svg.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game-svg.js"></script>
+    <script src="js/ui-svg.js"></script>
+</body>
+</html>

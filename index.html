@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>波波拳 - 充气放大招！</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>👊 波波拳 👊</h1>
+            <p class="subtitle">充气 · 蓄力 · 放大招！</p>
+        </header>
+
+        <!-- 模式选择 -->
+        <div id="mode-select" class="screen active">
+            <h2>选择游戏模式</h2>
+            <div class="mode-buttons">
+                <button class="mode-btn" data-mode="hp">
+                    <span class="mode-icon">❤️</span>
+                    <span class="mode-name">血量模式</span>
+                    <span class="mode-desc">100HP格斗战</span>
+                </button>
+                <button class="mode-btn" data-mode="pvp">
+                    <span class="mode-icon">👥</span>
+                    <span class="mode-name">双人对战</span>
+                    <span class="mode-desc">本地对战</span>
+                </button>
+            </div>
+            <div class="achievements-preview">
+                <button class="achievements-btn" onclick="showAchievements()">
+                    <span>🏅</span> 成就系统
+                </button>
+            </div>
+        </div>
+
+        <!-- 角色选择 P1 -->
+        <div id="character-select" class="screen">
+            <h2 id="p1-select-title">玩家1选择角色</h2>
+            <div class="character-grid" id="character-grid"></div>
+            <button class="back-btn" onclick="showScreen('mode-select')">← 返回</button>
+        </div>
+
+        <!-- 角色选择 P2 -->
+        <div id="pvp-character-select" class="screen">
+            <h2>玩家2选择角色</h2>
+            <div class="character-grid" id="pvp-character-grid"></div>
+            <button class="back-btn" onclick="showScreen('character-select')">← 返回</button>
+        </div>
+
+        <!-- 难度选择 -->
+        <div id="difficulty-select" class="screen">
+            <h2>选择AI难度</h2>
+            <div class="difficulty-buttons">
+                <button class="diff-btn" data-diff="easy">
+                    <span class="diff-icon">🌱</span>
+                    <span class="diff-name">新手</span>
+                    <span class="diff-desc">AI会犯错</span>
+                </button>
+                <button class="diff-btn" data-diff="normal">
+                    <span class="diff-icon">⚔️</span>
+                    <span class="diff-name">普通</span>
+                    <span class="diff-desc">正常对战</span>
+                </button>
+                <button class="diff-btn" data-diff="hard">
+                    <span class="diff-icon">🔥</span>
+                    <span class="diff-name">困难</span>
+                    <span class="diff-desc">AI会读招</span>
+                </button>
+            </div>
+            <button class="back-btn" onclick="showScreen('character-select')">← 返回</button>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-screen" class="screen">
+            <div class="battle-info">
+                <div class="round-info">第 <span id="round-num">1</span> 回合</div>
+                <div class="score-board">
+                    <span id="p1-score">0</span> : <span id="p2-score">0</span>
+                </div>
+            </div>
+
+            <div class="battle-arena">
+                <div class="fighter player" id="p1-fighter">
+                    <div class="fighter-avatar" id="p1-avatar">🥊</div>
+                    <div class="fighter-name" id="p1-name">玩家1</div>
+                    <div class="hp-bar" id="p1-hp-bar">
+                        <div class="hp-fill" id="p1-hp-fill"></div>
+                        <span class="hp-text" id="p1-hp-text">100/100</span>
+                    </div>
+                    <div class="bobo-gauge" id="p1-bobo">
+                        <div class="bobo-fill" id="p1-bobo-fill"></div>
+                        <span class="bobo-text">波波槽</span>
+                    </div>
+                    <div class="combo-display" id="p1-combo"></div>
+                </div>
+
+                <div class="vs-area">
+                    <div class="vs-text">VS</div>
+                    <div class="move-display">
+                        <div class="move-icon" id="p1-move">?</div>
+                        <div class="move-result" id="move-result"></div>
+                        <div class="move-icon" id="p2-move">?</div>
+                    </div>
+                </div>
+
+                <div class="fighter enemy" id="p2-fighter">
+                    <div class="fighter-avatar" id="p2-avatar">🤖</div>
+                    <div class="fighter-name" id="p2-name">玩家2</div>
+                    <div class="hp-bar" id="p2-hp-bar">
+                        <div class="hp-fill" id="p2-hp-fill"></div>
+                        <span class="hp-text" id="p2-hp-text">100/100</span>
+                    </div>
+                    <div class="bobo-gauge" id="p2-bobo">
+                        <div class="bobo-fill" id="p2-bobo-fill"></div>
+                        <span class="bobo-text">波波槽</span>
+                    </div>
+                    <div class="combo-display" id="p2-combo"></div>
+                </div>
+            </div>
+
+            <div class="item-cards" id="item-cards">
+                <div class="item-card" id="item1" onclick="useItem(0)">
+                    <span class="item-icon">👁️</span>
+                    <span class="item-name">透视眼</span>
+                    <span class="item-desc">看对手出招</span>
+                </div>
+                <div class="item-card" id="item2" onclick="useItem(1)">
+                    <span class="item-icon">🔄</span>
+                    <span class="item-name">换牌手</span>
+                    <span class="item-desc">强制平局</span>
+                </div>
+                <div class="item-card" id="item3" onclick="useItem(2)">
+                    <span class="item-icon">⚡</span>
+                    <span class="item-name">充能器</span>
+                    <span class="item-desc">立即+30能量</span>
+                </div>
+            </div>
+
+            <div class="turn-indicator" id="turn-indicator">
+                <span>玩家1的回合</span>
+            </div>
+
+            <div class="move-controls" id="p1-controls">
+                <div class="player-label">玩家1控制</div>
+                <div class="normal-moves">
+                    <button class="move-btn" data-move="rock" data-player="1">
+                        <span class="move-emoji">👊</span>
+                        <span class="move-label">石头</span>
+                    </button>
+                    <button class="move-btn" data-move="scissors" data-player="1">
+                        <span class="move-emoji">✌️</span>
+                        <span class="move-label">剪刀</span>
+                    </button>
+                    <button class="move-btn" data-move="paper" data-player="1">
+                        <span class="move-emoji">🖐️</span>
+                        <span class="move-label">布</span>
+                    </button>
+                </div>
+                
+                <div class="super-moves" id="p1-super-moves">
+                    <button class="super-btn" data-super="impact" data-player="1" disabled>
+                        <span class="super-emoji">💥</span>
+                        <span class="super-label">波波冲击</span>
+                    </button>
+                    <button class="super-btn" data-super="shield" data-player="1" disabled>
+                        <span class="super-emoji">🛡️</span>
+                        <span class="super-label">波波护盾</span>
+                    </button>
+                    <button class="super-btn" data-super="steal" data-player="1" disabled>
+                        <span class="super-emoji">⚡</span>
+                        <span class="super-label">波波偷取</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="move-controls hidden" id="p2-controls">
+                <div class="player-label">玩家2控制</div>
+                <div class="normal-moves">
+                    <button class="move-btn" data-move="rock" data-player="2">
+                        <span class="move-emoji">👊</span>
+                        <span class="move-label">石头</span>
+                    </button>
+                    <button class="move-btn" data-move="scissors" data-player="2">
+                        <span class="move-emoji">✌️</span>
+                        <span class="move-label">剪刀</span>
+                    </button>
+                    <button class="move-btn" data-move="paper" data-player="2">
+                        <span class="move-emoji">🖐️</span>
+                        <span class="move-label">布</span>
+                    </button>
+                </div>
+                
+                <div class="super-moves" id="p2-super-moves">
+                    <button class="super-btn" data-super="impact" data-player="2" disabled>
+                        <span class="super-emoji">💥</span>
+                        <span class="super-label">波波冲击</span>
+                    </button>
+                    <button class="super-btn" data-super="shield" data-player="2" disabled>
+                        <span class="super-emoji">🛡️</span>
+                        <span class="super-label">波波护盾</span>
+                    </button>
+                    <button class="super-btn" data-super="steal" data-player="2" disabled>
+                        <span class="super-emoji">⚡</span>
+                        <span class="super-label">波波偷取</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="battle-log" id="battle-log"></div>
+            
+            <button class="back-btn" onclick="resetGame()">↺ 重新开始</button>
+        </div>
+
+        <!-- 成就系统 -->
+        <div id="achievements-screen" class="screen">
+            <h2>🏅 成就系统</h2>
+            <div class="achievements-stats">
+                <div class="stat-item">
+                    <span class="stat-label">总游戏场次</span>
+                    <span class="stat-value" id="total-games">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">胜利场次</span>
+                    <span class="stat-value" id="total-wins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">成就解锁</span>
+                    <span class="stat-value" id="achievements-unlocked">0/10</span>
+                </div>
+            </div>
+            <div class="achievements-list" id="achievements-list"></div>
+            <button class="back-btn" onclick="showScreen('mode-select')">← 返回</button>
+        </div>
+
+        <!-- 结果界面 -->
+        <div id="result-screen" class="screen">
+            <div class="result-content">
+                <div class="result-emoji" id="result-emoji">🏆</div>
+                <h2 id="result-title">胜利！</h2>
+                <p id="result-desc">你击败了对手！</p>
+                <div class="achievements-earned" id="achievements-earned"></div>
+                <button class="btn-primary" onclick="resetGame()">再来一局</button>
+                <button class="btn-secondary" onclick="showScreen('mode-select')">返回主菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/achievements.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>

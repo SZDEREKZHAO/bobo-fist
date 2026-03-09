@@ -1,0 +1,366 @@
+/* 波波拳 SVG 版本 - 增强样式 */
+
+/* 角色卡片悬停动画 */
+.character-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.character-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.character-card:hover .character-avatar svg {
+    animation: characterBounce 0.6s ease infinite;
+}
+
+@keyframes characterBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* 角色选中效果 */
+.character-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(255, 230, 109, 0.4);
+    animation: selectedPulse 1.5s ease infinite;
+}
+
+@keyframes selectedPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 230, 109, 0.4); }
+    50% { box-shadow: 0 0 40px rgba(255, 230, 109, 0.6); }
+}
+
+/* 战斗中的角色动画 */
+.fighter-avatar {
+    position: relative;
+    overflow: hidden;
+}
+
+.fighter-avatar::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255,255,255,0.1) 50%,
+        transparent 70%
+    );
+    animation: shine 3s ease infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* 波波槽满时的角色发光 */
+.fighter-avatar.super {
+    animation: superGlow 1s ease infinite;
+}
+
+.fighter-avatar.super svg {
+    filter: drop-shadow(0 0 20px var(--bobo-gold));
+    animation: superShake 0.5s ease infinite;
+}
+
+@keyframes superGlow {
+    0%, 100% { box-shadow: 0 0 20px var(--bobo-gold); }
+    50% { box-shadow: 0 0 40px var(--bobo-gold), 0 0 60px var(--primary); }
+}
+
+@keyframes superShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* 出招按钮 SVG 样式 */
+.move-btn, .super-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.move-btn svg, .super-btn svg {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.move-btn:hover svg {
+    transform: scale(1.2) rotate(-10deg);
+    filter: drop-shadow(0 5px 15px rgba(78, 205, 196, 0.5));
+}
+
+.move-btn:active svg {
+    transform: scale(0.9);
+}
+
+.super-btn:not(:disabled) svg {
+    animation: superIconPulse 1s ease infinite;
+}
+
+@keyframes superIconPulse {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--primary)); }
+    50% { filter: drop-shadow(0 0 20px var(--primary)) drop-shadow(0 0 30px var(--accent)); }
+}
+
+/* 出招显示区域 */
+.move-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--bg-card), rgba(255,255,255,0.05));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.move-icon svg {
+    width: 50px;
+    height: 50px;
+}
+
+.move-icon.reveal {
+    border-color: var(--accent);
+    transform: scale(1.1);
+    animation: revealPop 0.5s ease;
+}
+
+@keyframes revealPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1.1); }
+}
+
+/* 伤害飘字动画 */
+.damage-popup {
+    position: absolute;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--hp-red);
+    text-shadow: 0 0 20px var(--hp-red);
+    animation: damageFloat 1.2s ease forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes damageFloat {
+    0% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-30px) scale(1.3);
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(-60px) scale(0.8);
+    }
+}
+
+/* 连击动画 */
+.combo-display {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.combo-display.active {
+    animation: comboShake 0.5s ease;
+}
+
+.combo-display.active::after {
+    content: '🔥';
+    margin-left: 5px;
+    animation: flameFlicker 0.3s ease infinite;
+}
+
+@keyframes comboShake {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.3) rotate(-5deg); }
+    75% { transform: scale(1.3) rotate(5deg); }
+}
+
+@keyframes flameFlicker {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+/* 大招特效 */
+.super-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.super-effect.impact {
+    background: radial-gradient(circle at center, rgba(231,76,60,0.6) 0%, transparent 70%);
+    animation: impactFlash 0.5s ease;
+}
+
+.super-effect.shield {
+    background: radial-gradient(circle at center, rgba(52,152,219,0.6) 0%, transparent 70%);
+    animation: shieldPulse 0.8s ease;
+}
+
+.super-effect.steal {
+    background: radial-gradient(circle at center, rgba(155,89,182,0.6) 0%, transparent 70%);
+    animation: stealSwipe 0.6s ease;
+}
+
+@keyframes impactFlash {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+@keyframes shieldPulse {
+    0%, 100% { opacity: 0; }
+    25%, 75% { opacity: 1; }
+}
+
+@keyframes stealSwipe {
+    0% { opacity: 0; transform: translateX(-100%); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(100%); }
+}
+
+/* 胜利/失败动画 */
+.result-emoji {
+    animation: resultBounce 1s ease infinite;
+}
+
+@keyframes resultBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.1); }
+}
+
+/* 道具卡悬停 */
+.item-card {
+    transition: all 0.3s ease;
+}
+
+.item-card:hover:not(.used) {
+    transform: translateY(-5px) rotate(2deg);
+    box-shadow: 0 15px 30px rgba(78, 205, 196, 0.3);
+}
+
+.item-card:hover:not(.used) .item-icon {
+    animation: itemWiggle 0.5s ease infinite;
+}
+
+@keyframes itemWiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+/* 血条动画 */
+.hp-fill {
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.hp-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: hpShimmer 2s ease infinite;
+}
+
+@keyframes hpShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* 波波槽动画 */
+.bobo-fill {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.bobo-fill.full {
+    animation: boboPulse 0.5s ease infinite alternate;
+}
+
+@keyframes boboPulse {
+    from { filter: brightness(1) drop-shadow(0 0 5px var(--bobo-gold)); }
+    to { filter: brightness(1.5) drop-shadow(0 0 20px var(--bobo-gold)); }
+}
+
+/* 屏幕切换动画 */
+.screen {
+    animation: screenEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes screenEnter {
+    from { 
+        opacity: 0; 
+        transform: translateY(30px) scale(0.95);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 按钮点击波纹效果 */
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* 成就解锁动画 */
+.achievement-item.unlocked {
+    animation: achievementUnlock 0.6s ease;
+}
+
+@keyframes achievementUnlock {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05) translateX(10px); }
+    100% { transform: scale(1); }
+}
+
+.achievement-item.unlocked .achievement-icon {
+    animation: achievementGlow 1s ease infinite;
+}
+
+@keyframes achievementGlow {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--accent)); }
+    50% { filter: drop-shadow(0 0 20px var(--accent)); }
+}
