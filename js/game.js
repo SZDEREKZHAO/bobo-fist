@@ -506,9 +506,6 @@ function showSuperBattleAnimation(container, attacker, side, callback) {
         callback();
     }, 2000);
 }
-        callback();
-    }, 2000);
-}
 
 // 气球爆炸特效
 function createBalloonEffect(container, isLeft) {
