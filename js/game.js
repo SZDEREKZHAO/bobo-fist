@@ -40,14 +40,27 @@ const MOVE_NAMES = { rock: '石头', scissors: '剪刀', paper: '布' };
 const MOVE_EMOJIS = { rock: '👊', scissors: '✌️', paper: '🖐️' };
 
 function initGame() {
-    generateCharacterCards();
-    generatePVPCards();
-    bindEvents();
+    try {
+        console.log('开始初始化游戏...');
+        generateCharacterCards();
+        console.log('角色卡片生成完成');
+        generatePVPCards();
+        console.log('PVP角色卡片生成完成');
+        bindEvents();
+        console.log('事件绑定完成');
+    } catch (e) {
+        console.error('初始化游戏时出错:', e);
+    }
 }
 
 function bindEvents() {
-    document.querySelectorAll('.mode-btn').forEach(btn => {
+    console.log('开始绑定事件...');
+    const modeBtns = document.querySelectorAll('.mode-btn');
+    console.log('找到 mode-btn 按钮数量:', modeBtns.length);
+    
+    modeBtns.forEach((btn, index) => {
         btn.addEventListener('click', () => {
+            console.log('点击了模式按钮:', btn.dataset.mode);
             GameState.mode = btn.dataset.mode;
             GameState.isPVP = btn.dataset.mode === 'pvp';
             
@@ -56,7 +69,9 @@ function bindEvents() {
             } else {
                 document.getElementById('p1-select-title').textContent = '选择你的战士';
             }
+            console.log('准备切换到 character-select 界面');
             showScreen('character-select');
+            console.log('已切换到 character-select 界面');
         });
     });
 

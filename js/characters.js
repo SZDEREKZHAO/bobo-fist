@@ -269,30 +269,64 @@ function getCharacter(id) {
 
 // 生成角色选择卡片HTML
 function generateCharacterCards() {
-    const grid = document.getElementById('character-grid');
-    grid.innerHTML = CHARACTERS.map(char => `
-        <div class="character-card" data-character="${char.id}" onclick="selectCharacter('${char.id}')">
-            <div class="character-avatar">${char.avatar}</div>
-            <div class="character-name">${char.name}</div>
-            <div class="character-title">${char.title}</div>
-            <div class="character-skill">${char.skill}</div>
-            <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
-            <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
-        </div>
-    `).join('');
+    try {
+        console.log('开始生成角色卡片...');
+        const grid = document.getElementById('character-grid');
+        if (!grid) {
+            console.error('未找到 character-grid 元素');
+            return;
+        }
+        console.log('找到 character-grid 元素');
+        
+        const html = CHARACTERS.map(char => {
+            console.log('生成角色卡片:', char.id);
+            return `
+                <div class="character-card" data-character="${char.id}" onclick="selectCharacter('${char.id}')">
+                    <div class="character-avatar">${char.avatar}</div>
+                    <div class="character-name">${char.name}</div>
+                    <div class="character-title">${char.title}</div>
+                    <div class="character-skill">${char.skill}</div>
+                    <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
+                    <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
+                </div>
+            `;
+        }).join('');
+        
+        grid.innerHTML = html;
+        console.log('角色卡片生成完成');
+    } catch (e) {
+        console.error('生成角色卡片时出错:', e);
+    }
 }
 
 // 生成P2角色选择
 function generatePVPCards() {
-    const grid = document.getElementById('pvp-character-grid');
-    grid.innerHTML = CHARACTERS.map(char => `
-        <div class="character-card" data-character="${char.id}" onclick="selectP2Character('${char.id}')">
-            <div class="character-avatar">${char.avatar}</div>
-            <div class="character-name">${char.name}</div>
-            <div class="character-title">${char.title}</div>
-            <div class="character-skill">${char.skill}</div>
-            <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
-            <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
-        </div>
-    `).join('');
+    try {
+        console.log('开始生成PVP角色卡片...');
+        const grid = document.getElementById('pvp-character-grid');
+        if (!grid) {
+            console.error('未找到 pvp-character-grid 元素');
+            return;
+        }
+        console.log('找到 pvp-character-grid 元素');
+        
+        const html = CHARACTERS.map(char => {
+            console.log('生成PVP角色卡片:', char.id);
+            return `
+                <div class="character-card" data-character="${char.id}" onclick="selectP2Character('${char.id}')">
+                    <div class="character-avatar">${char.avatar}</div>
+                    <div class="character-name">${char.name}</div>
+                    <div class="character-title">${char.title}</div>
+                    <div class="character-skill">${char.skill}</div>
+                    <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
+                    <div class="character-shield">${char.shieldMove.emoji} ${char.shieldMove.name}</div>
+                </div>
+            `;
+        }).join('');
+        
+        grid.innerHTML = html;
+        console.log('PVP角色卡片生成完成');
+    } catch (e) {
+        console.error('生成PVP角色卡片时出错:', e);
+    }
 }

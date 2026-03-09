@@ -248,5 +248,28 @@
     <script src="js/ai.js"></script>
     <script src="js/game.js"></script>
     <script src="js/ui.js"></script>
+    <script>
+        // 诊断脚本
+        console.log('=== 诊断信息 ===');
+        console.log('1. CHARACTERS 定义:', typeof CHARACTERS !== 'undefined' ? '是 (' + CHARACTERS.length + '个角色)' : '否');
+        console.log('2. getCharacter 定义:', typeof getCharacter !== 'undefined' ? '是' : '否');
+        console.log('3. generateCharacterCards 定义:', typeof generateCharacterCards !== 'undefined' ? '是' : '否');
+        console.log('4. generatePVPCards 定义:', typeof generatePVPCards !== 'undefined' ? '是' : '否');
+        console.log('5. bindEvents 定义:', typeof bindEvents !== 'undefined' ? '是' : '否');
+        console.log('6. showScreen 定义:', typeof showScreen !== 'undefined' ? '是' : '否');
+        console.log('7. initGame 定义:', typeof initGame !== 'undefined' ? '是' : '否');
+        console.log('8. window.onload 设置:', window.onload ? '是' : '否');
+        
+        // 测试生成卡片
+        try {
+            const testGrid = document.getElementById('character-grid');
+            console.log('9. character-grid 元素:', testGrid ? '找到' : '未找到');
+            if (testGrid && typeof generateCharacterCards === 'function') {
+                console.log('10. 准备调用 generateCharacterCards');
+            }
+        } catch(e) {
+            console.error('测试出错:', e);
+        }
+    </script>
 </body>
 </html>
