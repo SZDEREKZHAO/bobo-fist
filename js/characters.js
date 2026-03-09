@@ -1,4 +1,4 @@
-// 波波拳 - 角色数据
+// 波波拳 - 角色数据（专属大招版本）
 
 const CHARACTERS = [
     {
@@ -13,11 +13,14 @@ const CHARACTERS = [
             type: 'balloon',
             effect: '巨大气球爆炸冲击'
         },
-        superAnim: {
+        superMove: {
+            name: '极限爆破',
             emoji: '💥',
             type: 'balloonBurst',
-            name: '超级气球爆破',
-            desc: '充气到极限后爆炸，造成范围伤害'
+            desc: '释放全部充气能量，造成高额伤害',
+            effect: 'dealDamage',
+            multiplier: 3.5,
+            animClass: 'super-balloon'
         }
     },
     {
@@ -26,17 +29,21 @@ const CHARACTERS = [
         title: '格斗王者',
         avatar: '👊',
         desc: '攻击力惊人，大招伤害更高',
-        skill: '大招伤害+25%',
+        skill: '伤害+25%',
         attackAnim: {
             emoji: '👊',
             type: 'punch',
             effect: '重拳直击对手'
         },
-        superAnim: {
+        superMove: {
+            name: '究极铁拳',
             emoji: '🥊',
             type: 'megaPunch',
-            name: '究极铁拳',
-            desc: '蓄力重拳，一击必杀'
+            desc: '蓄力一击，伤害翻倍并眩晕对手',
+            effect: 'dealDamage',
+            multiplier: 4,
+            bonusEffect: 'stun',
+            animClass: 'super-punch'
         }
     },
     {
@@ -51,11 +58,15 @@ const CHARACTERS = [
             type: 'slash',
             effect: '瞬身斩击'
         },
-        superAnim: {
+        superMove: {
+            name: '影分身之术',
             emoji: '🌪️',
             type: 'ninjaStorm',
-            name: '影分身斩',
-            desc: '分出多个影分身同时斩击'
+            desc: '召唤3个分身同时攻击，伤害x3',
+            effect: 'dealDamage',
+            multiplier: 3,
+            hits: 3,
+            animClass: 'super-ninja'
         }
     },
     {
@@ -70,11 +81,16 @@ const CHARACTERS = [
             type: 'magic',
             effect: '元素魔法弹'
         },
-        superAnim: {
+        superMove: {
+            name: '元素风暴',
             emoji: '🔥',
             type: 'elementalBlast',
-            name: '元素爆裂',
-            desc: '召唤火、冰、雷三重元素攻击'
+            desc: '召唤火冰雷三重元素，伤害+灼烧',
+            effect: 'dealDamage',
+            multiplier: 3,
+            bonusEffect: 'burn',
+            burnDamage: 5,
+            animClass: 'super-mage'
         }
     },
     {
@@ -89,11 +105,16 @@ const CHARACTERS = [
             type: 'bite',
             effect: '蝙蝠群吸血攻击'
         },
-        superAnim: {
+        superMove: {
+            name: '血月降临',
             emoji: '🩸',
             type: 'bloodStorm',
-            name: '血月降临',
-            desc: '召唤血月，大量吸血恢复'
+            desc: '召唤血月，造成伤害并吸血50%',
+            effect: 'dealDamage',
+            multiplier: 2.5,
+            bonusEffect: 'lifesteal',
+            lifestealPercent: 50,
+            animClass: 'super-vampire'
         }
     },
     {
@@ -108,11 +129,15 @@ const CHARACTERS = [
             type: 'melee',
             effect: '机械臂重击'
         },
-        superAnim: {
+        superMove: {
+            name: '聚能激光',
             emoji: '🚀',
             type: 'laserCannon',
-            name: '聚能激光炮',
-            desc: '充能发射高能激光束'
+            desc: '发射高能激光，无视防御',
+            effect: 'dealDamage',
+            multiplier: 3,
+            bonusEffect: 'pierce',
+            animClass: 'super-robot'
         }
     },
     {
@@ -127,11 +152,16 @@ const CHARACTERS = [
             type: 'roll',
             effect: '掷骰子决定伤害'
         },
-        superAnim: {
+        superMove: {
+            name: '命运轮盘',
             emoji: '🎯',
             type: 'jackpot',
-            name: '命运轮盘',
-            desc: '转动命运之轮，随机巨额伤害'
+            desc: '伤害在x2~x5之间随机',
+            effect: 'dealDamage',
+            multiplierMin: 2,
+            multiplierMax: 5,
+            random: true,
+            animClass: 'super-gambler'
         }
     },
     {
@@ -146,11 +176,15 @@ const CHARACTERS = [
             type: 'shieldBash',
             effect: '盾牌冲撞'
         },
-        superAnim: {
+        superMove: {
+            name: '大地震击',
             emoji: '🌍',
             type: 'earthquake',
-            name: '大地震击',
-            desc: '重击地面造成地震伤害'
+            desc: '重击地面，伤害并眩晕对手',
+            effect: 'dealDamage',
+            multiplier: 2.5,
+            bonusEffect: 'stun',
+            animClass: 'super-tank'
         }
     }
 ];
@@ -169,6 +203,21 @@ function generateCharacterCards() {
             <div class="character-name">${char.name}</div>
             <div class="character-title">${char.title}</div>
             <div class="character-skill">${char.skill}</div>
+            <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
+        </div>
+    `).join('');
+}
+
+// 生成P2角色选择
+function generatePVPCards() {
+    const grid = document.getElementById('pvp-character-grid');
+    grid.innerHTML = CHARACTERS.map(char => `
+        <div class="character-card" data-character="${char.id}" onclick="selectP2Character('${char.id}')">
+            <div class="character-avatar">${char.avatar}</div>
+            <div class="character-name">${char.name}</div>
+            <div class="character-title">${char.title}</div>
+            <div class="character-skill">${char.skill}</div>
+            <div class="character-super">${char.superMove.emoji} ${char.superMove.name}</div>
         </div>
     `).join('');
 }

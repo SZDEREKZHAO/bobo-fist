@@ -85,51 +85,45 @@ class BoboAI {
         }
     }
 
-    // 选择大招
+    // 选择是否使用大招
     chooseSuper(aiBobo, playerBobo, aiHP, playerHP) {
-        if (aiBobo < 100) return null;
+        if (aiBobo < 100) return false;
 
-        const supers = ['impact', 'shield', 'steal'];
-        
         switch (this.difficulty) {
             case 'easy':
-                // 新手：随机放大招
-                return supers[Math.floor(Math.random() * 3)];
+                // 新手：70%概率放大招
+                return Math.random() < 0.7;
 
             case 'normal':
-                // 普通：根据血量判断
+                // 普通：根据情况判断
                 if (aiHP < 30) {
-                    // 血量低，优先护盾
-                    return Math.random() < 0.6 ? 'shield' : 'impact';
+                    // 血量低，大概率放大招反击
+                    return Math.random() < 0.8;
                 }
-                if (playerBobo >= 80) {
-                    // 玩家能量高，偷取
-                    return Math.random() < 0.5 ? 'steal' : 'impact';
+                if (playerHP <= 40) {
+                    // 玩家残血，放大招收割
+                    return Math.random() < 0.9;
                 }
-                return 'impact';
+                return Math.random() < 0.6;
 
             case 'hard':
                 // 困难：最优策略
                 if (aiHP < 25) {
-                    // 危急时刻，护盾保命
-                    return 'shield';
-                }
-                if (playerBobo >= 100) {
-                    // 玩家有大招，偷取或护盾
-                    return playerHP > 50 ? 'steal' : 'shield';
+                    // 危急时刻，放大招翻盘
+                    return true;
                 }
                 if (playerHP <= 30) {
-                    // 玩家残血，冲击收割
-                    return 'impact';
+                    // 玩家残血，大招击杀
+                    return true;
                 }
-                if (aiHP > playerHP + 20) {
-                    // 血量优势，偷取能量滚雪球
-                    return 'steal';
+                if (playerBobo >= 100 && aiHP < 50) {
+                    // 玩家有大招且AI血量不健康，先下手为强
+                    return Math.random() < 0.8;
                 }
-                return 'impact';
+                return Math.random() < 0.7;
 
             default:
-                return 'impact';
+                return Math.random() < 0.5;
         }
     }
 

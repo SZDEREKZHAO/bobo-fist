@@ -554,6 +554,45 @@ button:active {
     color: var(--accent);
 }
 
+/* 角色专属大招样式增强 */
+#p1-super-moves .super-btn,
+#p2-super-moves .super-btn {
+    min-width: 220px;
+    padding: 20px 25px;
+}
+
+#p1-super-moves .super-emoji,
+#p2-super-moves .super-emoji {
+    font-size: 2.5em;
+}
+
+#p1-super-moves .super-label,
+#p2-super-moves .super-label {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--accent);
+}
+
+#p1-super-moves .super-desc,
+#p2-super-moves .super-desc {
+    font-size: 0.85em;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 200px;
+    line-height: 1.3;
+}
+
+/* 角色卡片显示大招 */
+.character-super {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(255,215,0,0.1));
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    font-size: 0.85em;
+    color: var(--accent);
+}
+
 /* 战斗日志 */
 .battle-log {
     background: rgba(0,0,0,0.3);

@@ -75,12 +75,12 @@ function bindEvents() {
             if (GameState.isPVP && GameState.pvpTurn !== 1) return;
             
             const isSuper = btn.classList.contains('super-btn');
-            const move = btn.dataset.move || btn.dataset.super;
+            const move = btn.dataset.move;
             
             if (GameState.isPVP) {
-                handlePVPMove(1, move, isSuper);
+                handlePVPMove(1, move || 'super', isSuper);
             } else {
-                playRound(move, isSuper);
+                playRound(move || 'super', isSuper);
             }
         });
     });
@@ -92,8 +92,8 @@ function bindEvents() {
             if (!GameState.isPVP || GameState.pvpTurn !== 2) return;
             
             const isSuper = btn.classList.contains('super-btn');
-            const move = btn.dataset.move || btn.dataset.super;
-            handlePVPMove(2, move, isSuper);
+            const move = btn.dataset.move;
+            handlePVPMove(2, move || 'super', isSuper);
         });
     });
 }
@@ -277,11 +277,13 @@ function resetBattleState() {
 }
 
 function playRound(p1Move, isSuper) {
-    const aiSuper = GameState.ai.chooseSuper(GameState.p2Bobo, GameState.p1Bobo, GameState.p2HP, GameState.p1HP);
+    // AI决定是否使用大招
+    const aiUseSuper = GameState.ai.chooseSuper(GameState.p2Bobo, GameState.p1Bobo, GameState.p2HP, GameState.p1HP);
     let p2Move, p2IsSuper = false;
     
-    if (aiSuper && Math.random() < 0.7) {
-        p2Move = aiSuper;
+    if (aiUseSuper) {
+        // AI使用专属大招
+        p2Move = 'super';
         p2IsSuper = true;
     } else {
         p2Move = GameState.ai.chooseMove(GameState.p1Bobo, GameState.p2Bobo);
@@ -691,8 +693,16 @@ function getAttackEffectEmoji(type) {
 
 function judgeRound(p1Move, p2Move, p1Super, p2Super) {
     if (p1Super && p2Super) return { winner: 'draw', text: '大招对轰！平局！' };
-    if (p1Super) return { winner: 'p1', text: '波波冲击命中！' };
-    if (p2Super) return { winner: 'p2', text: '被波波冲击击中！' };
+    
+    if (p1Super) {
+        const superName = GameState.p1Character?.superMove?.name || '大招';
+        return { winner: 'p1', text: `${superName}命中！` };
+    }
+    
+    if (p2Super) {
+        const superName = GameState.p2Character?.superMove?.name || '大招';
+        return { winner: 'p2', text: `被${superName}击中！` };
+    }
     
     if (p1Move === p2Move) return { winner: 'draw', text: '平局！' };
     if (MOVE_RULES[p1Move].beats === p2Move) return { winner: 'p1', text: '你赢了！' };
@@ -720,10 +730,18 @@ function processRoundResult(result, p1IsSuper, p2IsSuper) {
     if (GameState.mode === 'hp' || GameState.mode === 'pvp') {
         if (result.winner === 'p1') {
             p2Damage = calculateDamage('p1', p1IsSuper);
+            // 应用大招特效
+            if (p1IsSuper) {
+                p2Damage = applySuperEffect('p1', p2Damage);
+            }
             GameState.battleStats.maxDamage = Math.max(GameState.battleStats.maxDamage, p2Damage);
             if (p2IsSuper) GameState.battleStats.superKill = true;
         } else if (result.winner === 'p2') {
             p1Damage = calculateDamage('p2', p2IsSuper);
+            // 应用大招特效
+            if (p2IsSuper) {
+                p1Damage = applySuperEffect('p2', p1Damage);
+            }
         }
     }
     
@@ -764,20 +782,83 @@ function processRoundResult(result, p1IsSuper, p2IsSuper) {
 
 function calculateDamage(winner, isSuper) {
     let baseDamage = 20;
-    if (isSuper) baseDamage = 60;
     
     const char = winner === 'p1' ? GameState.p1Character : GameState.p2Character;
     const combo = winner === 'p1' ? GameState.p1Combo : GameState.p2Combo;
+    const superMove = char.superMove;
     
-    if (char.id === 'fist' && isSuper) baseDamage *= 1.25;
-    if (char.id === 'ninja') baseDamage *= (1 + combo * 0.15);
-    if (char.id === 'tank') baseDamage *= 0.8;
-    if (char.id === 'gambler' && Math.random() < 0.2) baseDamage *= 2;
-    if (char.id === 'gambler' && isSuper) {
-        baseDamage = 40 * (2 + Math.random() * 3); // x2~x5随机
+    if (isSuper) {
+        // 使用专属大招计算伤害
+        let multiplier = superMove.multiplier || 3;
+        
+        // 赌徒特殊处理 - 随机伤害
+        if (superMove.random) {
+            multiplier = superMove.multiplierMin + Math.random() * (superMove.multiplierMax - superMove.multiplierMin);
+        }
+        
+        baseDamage = 40 * multiplier; // 基础40伤害 * 倍率
+        
+        // 忍者连击加成
+        if (char.id === 'ninja' && superMove.hits) {
+            baseDamage *= superMove.hits;
+        }
+        
+        // 铁拳伤害加成
+        if (char.id === 'fist') {
+            baseDamage *= 1.25;
+        }
+        
+        // 巨像伤害降低
+        if (char.id === 'tank') {
+            baseDamage *= 0.8;
+        }
+    } else {
+        // 普通攻击
+        if (char.id === 'ninja') baseDamage *= (1 + combo * 0.15);
+        if (char.id === 'tank') baseDamage *= 0.8;
+        if (char.id === 'gambler' && Math.random() < 0.2) baseDamage *= 2;
     }
     
     return Math.floor(baseDamage);
+}
+
+// 处理大招特殊效果
+function applySuperEffect(winner, damage) {
+    const char = winner === 'p1' ? GameState.p1Character : GameState.p2Character;
+    const superMove = char.superMove;
+    const target = winner === 'p1' ? 'p2' : 'p1';
+    
+    if (!superMove.bonusEffect) return damage;
+    
+    switch(superMove.bonusEffect) {
+        case 'stun':
+            // 眩晕效果 - 下回合对手不能充能（通过标记实现）
+            addLog(`⚡ ${char.name}的${superMove.name}眩晕了对手！`);
+            break;
+            
+        case 'lifesteal':
+            // 吸血效果
+            const healAmount = Math.floor(damage * (superMove.lifestealPercent || 30) / 100);
+            if (winner === 'p1') {
+                GameState.p1HP = Math.min(100, GameState.p1HP + healAmount);
+            } else {
+                GameState.p2HP = Math.min(100, GameState.p2HP + healAmount);
+            }
+            addLog(`🩸 ${char.name}吸取了${healAmount}点生命！`);
+            break;
+            
+        case 'burn':
+            // 灼烧效果 - 后续实现
+            addLog(`🔥 ${char.name}的${superMove.name}灼烧了对手！`);
+            break;
+            
+        case 'pierce':
+            // 破甲效果 - 无视防御（已体现在伤害计算中）
+            addLog(`💥 ${char.name}的${superMove.name}无视防御！`);
+            break;
+    }
+    
+    return damage;
 }
 
 function chargeBobo(result) {

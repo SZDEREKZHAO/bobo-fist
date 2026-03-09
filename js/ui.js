@@ -19,6 +19,10 @@ function updateUI() {
     document.getElementById('p2-avatar').textContent = GameState.p2Character?.avatar || '🤖';
     document.getElementById('p2-name').textContent = GameState.p2Character?.name || '电脑';
     
+    // 更新专属大招按钮显示
+    updateSuperButton(1);
+    updateSuperButton(2);
+    
     // 血条
     document.getElementById('p1-hp-fill').style.width = GameState.p1HP + '%';
     document.getElementById('p1-hp-text').textContent = `${GameState.p1HP}/100`;
@@ -49,10 +53,12 @@ function updateUI() {
         document.getElementById('p2-avatar').classList.remove('super');
     }
     
-    // 大招按钮
-    document.querySelectorAll('.super-btn').forEach(btn => {
-        btn.disabled = GameState.p1Bobo < 100;
-    });
+    // 大招按钮状态（根据能量）
+    const p1SuperBtn = document.querySelector('#p1-super-moves .super-btn');
+    const p2SuperBtn = document.querySelector('#p2-super-moves .super-btn');
+    
+    if (p1SuperBtn) p1SuperBtn.disabled = GameState.p1Bobo < 100;
+    if (p2SuperBtn) p2SuperBtn.disabled = GameState.p2Bobo < 100;
     
     // 连击显示
     const p1ComboEl = document.getElementById('p1-combo');
@@ -82,6 +88,21 @@ function updateUI() {
         document.getElementById('p1-hp-bar').style.display = 'block';
         document.getElementById('p2-hp-bar').style.display = 'block';
     }
+}
+
+// 更新专属大招按钮显示
+function updateSuperButton(player) {
+    const character = player === 1 ? GameState.p1Character : GameState.p2Character;
+    if (!character) return;
+    
+    const superMove = character.superMove;
+    const emojiEl = document.getElementById(`p${player}-super-emoji`);
+    const nameEl = document.getElementById(`p${player}-super-name`);
+    const descEl = document.getElementById(`p${player}-super-desc`);
+    
+    if (emojiEl) emojiEl.textContent = superMove.emoji;
+    if (nameEl) nameEl.textContent = superMove.name;
+    if (descEl) descEl.textContent = superMove.desc;
 }
 
 // 显示伤害飘字
