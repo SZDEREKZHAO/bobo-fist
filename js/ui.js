@@ -36,6 +36,12 @@ function updateUI() {
     // 波波槽
     document.getElementById('p1-bobo-fill').style.width = GameState.p1Bobo + '%';
     document.getElementById('p2-bobo-fill').style.width = GameState.p2Bobo + '%';
+
+    // 更新波波槽数值显示
+    const p1BoboValue = document.getElementById('p1-bobo-value');
+    const p2BoboValue = document.getElementById('p2-bobo-value');
+    if (p1BoboValue) p1BoboValue.textContent = GameState.p1Bobo;
+    if (p2BoboValue) p2BoboValue.textContent = GameState.p2Bobo;
     
     // 波波槽满特效（改为50能量半满提示）
     const p1BoboEl = document.getElementById('p1-bobo-fill');
